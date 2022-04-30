@@ -1,0 +1,46 @@
+Tools used:
+  lite-xl, Bitwig Studio, Löve (love2d), LDTK, Piskel, Lua,
+  Insane amounts of ritalin, Audacity, Some amazing libraries 
+  written by very very very talented and nice people :)
+
+Credits:
+  lib/log.lua:    (MIT License, in-file) github.com/rxi/log.lua
+  lib/lume.lua:   (MIT License, in-file) github.com/rxi/lume
+  lib/bump.lua:   (MIT License, in-file) github.com/kikito/bump.lua
+  lib/binser.lua: (MIT License, in-file) github.com/bakpakin/
+  lib/profi.lua:  (MIT License, Luke Perkin, 2012)
+  
+  assets/amb_fluorescent_intro.ogg,
+  assets/amb_fluorescent_loop.ogg:  Bridge Sound, https://www.youtube.com/watch?v=TOueemiIVYU
+  
+  assets/snd_elevator.ogg: https://www.youtube.com/watch?v=axOEsMYwTcY
+  
+  assets/fnt_bitpotion.ttf: https://joebrogers.itch.io/bitpotion
+  assets/fnt_monogram.ttf:  https://datagoblin.itch.io/monogram
+  
+  Shakesoda (@mantafriend), Nameful, Coalio, Victor Diaz and specially Dad 
+    for their support at every single step of the creation of this game :)
+    
+  Nahuel, you suck.
+  
+Everything else inside of assets/ is covered under the CC-BY-SA 4.0 License, Copyright (C) Nelson Lopez.
+Everything else is covered under the ZLIB LICENSE ahead:
+  Copyright (c) 2022 Nelson Lopez
+  
+  This software is provided 'as-is', without any express or implied warranty. 
+  In no event will the authors be held liable for any damages arising from the use of this software.
+  
+  Permission is granted to anyone to use this software for any purpose, 
+  including commercial applications, and to alter it and redistribute it freely, 
+  subject to the following restrictions:
+  
+      1. The origin of this software must not be misrepresented; 
+          you must not claim that you wrote the original software. 
+          If you use this software in a product, an acknowledgment 
+          in the product documentation would be appreciated but is not required.
+  
+      2. Altered source versions must be plainly marked as such, 
+          and must not be misrepresented as being the original software.
+  
+      3. This notice may not be removed or altered from any source distribution.
+

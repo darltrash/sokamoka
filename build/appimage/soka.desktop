@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=sokamoka
+Exec=AppRun
+Type=Application
+Categories=Game;
+Terminal=false
+Icon=soka
+NoDisplay=true
