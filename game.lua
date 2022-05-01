@@ -118,7 +118,7 @@ return {
         for _, ent in ipairs(self.level.entities) do
             for _, sys in ipairs(systems) do
                 if sys:filter(ent) then
-                    if not ent.asleep then
+                    if sys.process and not ent.asleep then
                         sys:process(ent, delta, self)
                     end
                     

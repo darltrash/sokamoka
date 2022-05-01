@@ -85,10 +85,12 @@ for line in io.popen("find assets/*.ldtk"):lines() do
                         if field.__type == "EntityRef" then
                             fields.in_level = raw_level.identifier
                         
-                            local d = entity_references[field.__value.entityIid]
-                            fields[field.__identifier] = d
-                            if d then
-                                d[field.__identifier] = fields
+                            if field.__value then
+                                local d = entity_references[field.__value.entityIid]
+                                fields[field.__identifier] = d
+                                if d then
+                                    d[field.__identifier] = fields
+                                end
                             end
                         elseif field.__type == "Color" then
                             fields[field.__identifier] = hex(field.__value)

@@ -4,6 +4,7 @@ local input = require "input"
 local assets = require "assets"
 
 local atlas = assets.atlas0
+
 local lightbulb = {
     filter = function (self, ent)
         return ent.type == "LightBulb"
@@ -189,6 +190,11 @@ local player = {
         world.level.has_player = true
         ent.is_listener = true
         ent.is_player = true
+
+        ent.checkpoint = {
+            position = ent.position,
+            collider = ent.collider
+        }
     end,
     
     process = function (self, ent, delta, world)
@@ -262,19 +268,39 @@ local player = {
         end
         self.past_quad = q
         
-        if lc.isDown(1) then
-            local window = vector(lg.getDimensions()) / world.camera.scale / 2
-            local mouse = vector(lc.getX(), lc.getY()) / world.camera.scale
+        --if lc.isDown(1) then
+        --    local window = vector(lg.getDimensions()) / world.camera.scale / 2
+        --    local mouse = vector(lc.getX(), lc.getY()) / world.camera.scale
+        --    
+        --    local center = (ent.past_position or ent.position):lerp(ent.position, State.alpha) + vector(4, 8)
+        --    mouse = mouse + world.camera.real - window
+        --    local direction = (mouse - center) * 4
+        --    
+        --    world:add_entity({
+        --        type = "Bullet", 
+        --        velocity = direction,
+        --        position = center,
+        --    })
+        --end
+
+        local out_of_bounds =
+            ent.position.x > world.level.width or
+            ent.position.x < 0 or
+            ent.position.y > world.level.height or
+            ent.position.y < 0
+
+        if out_of_bounds then
+            world.transition.happening = true
+            world.transition.callback = function ()
+                local ck = ent.checkpoint
+                ent.position = ck.position:copy()-- + vector(ck.collider.w / 2, ck.collider.h / 2)
+                ent.past_position = ent.position:copy()
+                print(ent.position, ck.position)
+                ent.gravity_acceleration = 0
+                ent.velocity = vector(0, 0)
+                ent.acceleration = 64
+            end
             
-            local center = (ent.past_position or ent.position):lerp(ent.position, State.alpha) + vector(4, 8)
-            mouse = mouse + world.camera.real - window
-            local direction = (mouse - center) * 4
-            
-            world:add_entity({
-                type = "Bullet", 
-                velocity = direction,
-                position = center,
-            })
         end
     end
 }
@@ -286,6 +312,11 @@ local movement = {
     end,
 
     collision_filter = function(a, b)
+        if (a.type == "Player" and b.type == "Checkpoint") then
+            a.checkpoint = b
+            return "cross"
+        end
+
         if (b.is_enemy or b.type == "Player" or b.is_bullet) then
             return "cross"
         end
@@ -299,7 +330,7 @@ local movement = {
 
     process = function (self, ent, delta, world)
         ent.past_position = ent.position
-        _position = ent.position + ent.velocity * delta
+        local _position = ent.position + ent.velocity * delta
         
         if ent.collider then
             local x, y = world.level.world:move(ent, _position.x, _position.y, self.collision_filter)
