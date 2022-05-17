@@ -4,7 +4,7 @@ local modes = {
     keyboard = {
         times = {},
         map = {
-            up = "w", down = "s", left = "a", right = "d"
+            up = "w", down = "s", left = "a", right = "d", action = "e"
         },
 
         get_direction = function (self)

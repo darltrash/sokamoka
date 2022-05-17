@@ -113,7 +113,6 @@ local to_coroutine = function (list)
         local i = 1
         while (i <= #list) do
             local inst = list[i]
-            print(inst.type, inst.text, i)
 
             if inst.type == instruction_types.SAY then
                 state:say(inst.text)
@@ -171,34 +170,4 @@ local example = parse [[
         !
 ]]
 
-local state = {
-    say = function (text)
-        print(">" .. text .. "\n\t(Any key to continue)")
-        local a = io.read()
-    end,
-
-    ask = function (text, commands)
-        local tab = {}
-        local out = text .. " ("
-        for k, v in ipairs(commands) do
-            tab[v] = k
-
-            out = out .. v
-        end
-        print(out..")")
-        
-        local i 
-        repeat
-            i = io.open()
-        until tab[i]
-
-        return tab[i]
-    end,
-
-    quit = os.exit
-}
-
-local a = to_coroutine(example)
-while (coroutine.resume(a, state)) do
-    
-end
+print(require("lib.lume").serialize(example))

@@ -22,7 +22,7 @@ end
 
 vector.from_angle = function (theta, magnitude)
     return vector.new(
-         math.cos(theta)*magnitude, 
+         math.cos(theta)*magnitude,
         -math.sin(theta)*magnitude
     )
 end
@@ -34,6 +34,7 @@ end
 vector.rotate = function (self, theta)
     local s = math.sin(theta)
     local c = math.cos(theta)
+    
     return vector.new(
          (c * self.x) + (s * self.y),
         -(s * self.x) + (c * self.y)

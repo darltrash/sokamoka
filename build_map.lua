@@ -54,11 +54,9 @@ for line in io.popen("find assets/*.ldtk"):lines() do
         for _, field in ipairs(raw_level.fieldInstances) do
             if field.__type == "Color" then
                 level[field.__identifier] = hex(field.__value)
-                print(json.encode(level))
             else
                 level[field.__identifier] = field.__value
             end
-            c = true
         end
 
         for _, layer in ipairs(raw_level.layerInstances) do

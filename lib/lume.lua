@@ -738,8 +738,7 @@ function lume.ripairs(t)
   return ripairs_iter, t, (#t + 1)
 end
 
-
-function lume.color(str, mul)
+lume.color = lume.memoize(function (str, mul)
   mul = mul or 1
   local r, g, b, a
   r, g, b = str:match("#(%x%x)(%x%x)(%x%x)")
@@ -758,7 +757,7 @@ function lume.color(str, mul)
     error(("bad color string '%s'"):format(str))
   end
   return r * mul, g * mul, b * mul, a * mul
-end
+end)
 
 
 local chain_mt = {}

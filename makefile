@@ -1,4 +1,5 @@
-build:
+build-maps:
+	lua build_map.lua
 
 generate-love: 
 	rm -rf build/sokamoka.love
@@ -11,5 +12,5 @@ generate-appimage: generate-love
 	cp build/sokamoka.love build/appimage/game.love
 	appimagetool build/appimage/ build/sokamoka-x86_64.AppImage
 	
-run: build
+run: build-maps
 	love .

@@ -24,6 +24,12 @@ local a = {
         ["Comfortably Abstract"] = au.newSource("OST/00 Comfortably Abstract.mp3", "stream")
     },
     
+    shaders = {
+        lightpass = lg.newShader("assets/shd_lightpass.glsl"),
+        blur = lg.newShader("assets/shd_blur.glsl"),
+        main = lg.newShader("assets/shd_main.glsl")
+    },
+
     cache = {}
 }
 

@@ -10,14 +10,17 @@ lg.quad = lume.memoize(lg.newQuad)
 lm = love.math
 lc = love.mouse
 la = love.audio
+lt = love.timer
 
 State = {
     timestep = 1/30,
     lag = 1/30,
     timer = 0,
+    delta = 0,
     
     PROFILE = "1" == os.getenv("SOKA_PROFILE"),
-    DEBUG   = "1" == os.getenv("SOKA_DEBUG")
+    DEBUG   = "1" == os.getenv("SOKA_DEBUG"),
+    MUTED   = "1" == os.getenv("SOKA_MUTED")
 }
 
 local current
@@ -32,7 +35,7 @@ State.set_state = function (s, ...)
     current.init = current.init or NOOP
     current.loop = current.loop or NOOP
     current.draw = current.draw or NOOP
-
+    current.resize = current.resize or NOOP
     current:init()
 end
 
@@ -42,19 +45,25 @@ function love.load(...)
         log.info("Profiling has started!")
     end
 
+    if State.MUTED then
+        la.setVolume(0)
+        log.info("Game is muted!")
+    end
+
     State.set_state(1)
     
-    love.window.setTitle("sokamoka")
+    love.window.setTitle("")
     love.window.setMode(800, 600, {
         resizable = true,
-        
     })
 end
 
-local delta = 0
-function love.update(dt)
-    delta = dt
+function love.resize(w, h)
+    current:resize(w, h)
+end
 
+function love.update(dt)
+    State.delta = dt
     State.lag = State.lag + dt
 
     local n = 0
@@ -76,7 +85,8 @@ function love.update(dt)
 end
 
 function love.draw()
-    current:draw(delta)
+    lg.reset()
+    current:draw(lt.getDelta())
 end
 
 function love.quit()

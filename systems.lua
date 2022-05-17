@@ -5,6 +5,8 @@ local assets = require "assets"
 
 local atlas = assets.atlas0
 
+local mod = function(x, i) return x % i end
+
 local lightbulb = {
     filter = function (self, ent)
         return ent.type == "LightBulb"
@@ -26,6 +28,96 @@ local lightbulb = {
     
     process = function (self, ent)
         ent.destroy = true
+    end
+}
+
+local blank = {
+    filter = function (self, ent)
+        return ent.type == "Blank"
+    end,
+
+    setup = function (self, ent)
+        local w, h = ent.sprite:getDimensions()
+        if ent.quad then
+            _, _, w, h = ent.quad:getViewport()
+        end
+
+        ent.scale = vector(ent.collider.w / w, ent.collider.h / h)
+        ent.blend = (ent.Blend or "alpha"):lower()
+        if ent.Tint then
+            ent.Tint[4] = ent.Alpha or 1
+        end
+        ent.collider = nil
+    end
+}
+
+local particle = {
+    filter = function (self, ent)
+        return ent.type == "Particle"
+    end,
+
+    setup = function (self, ent)
+        ent.life = 0
+        ent.Tint = ent.Tint or {1, 1, 1, 1}
+        local s = lm.random(50, 100)/100
+        ent.scale = vector(s, s)
+        ent.sprite_offset = vector(1, 1)
+        ent.shine = 0.1
+        ent.Tint[4] = 0.7
+    end,
+
+    process = function (self, ent, delta)
+        local l = ent.life/ent.lifespan
+        local d = math.abs(mod(l + 0.5, 1) - 0.5) *2
+        --ent.Tint[4] 
+        --if ent.sus then
+        --    print(ent.Tint[4])
+        --end
+        --ent.scale = ent.scale:lerp(ent.end_scale, l)
+        ent.scale.x = d
+        ent.scale.y = d
+
+        ent.destroy = ent.life > ent.lifespan
+        ent.life = ent.life + delta*4
+        --ent.rotation = ent.life/10
+    end
+}
+
+local particle_spawner = {
+    filter = function (self, ent)
+        return ent.type == "ParticleSpawner"
+    end,
+
+    setup = function(self, ent)
+        ent.invisible = true
+        ent.timer = 0
+        ent.w = ent.collider.w
+        ent.h = ent.collider.h
+        ent.collider = nil
+    end,
+
+    process = function (self, ent, delta, world)
+        if ent.timer > ent.Frequency then
+            ent.timer = 0
+            for x=1, ent.Rate do
+                world:add_entity{
+                    type = "Particle",
+                    lifespan = ent.Lifespan, 
+                    sprite = ent.sprite,
+                    quad = ent.quad,
+                    blend = "add",
+                    velocity = vector(
+                        lume.vector(lm.random(0, 10), lm.random(50, 150)/100)
+                    ),
+                    Tint = ent.Color,
+                    position = ent.position + vector(
+                        lm.random(ent.w), 
+                        lm.random(ent.h)
+                    )
+                }
+            end
+        end
+        ent.timer = ent.timer + delta
     end
 }
 
@@ -82,7 +174,7 @@ local door = {
                 world.player.position = vector.from_table(ent.Door.position)
                 world.camera.real = world.player.position:copy()
                 world:load_level(ent.Door.in_level)
-                
+                world.player.checkpoint = ent.Door
             end
         end
     end
@@ -196,12 +288,15 @@ local player = {
             collider = ent.collider
         }
     end,
+
+    fake_filter = function ()
+        return "cross"
+    end,
     
     process = function (self, ent, delta, world)
         ent.camera_target = true
-        
         local velocity = input.get_direction() * ent.acceleration
-        
+
         if math.abs(velocity.x) > 0 then
             ent.acceleration = math.min(ent.acceleration+delta, 128)
             
@@ -290,15 +385,19 @@ local player = {
             ent.position.y < 0
 
         if out_of_bounds then
+            ent.on_transition = true
+
             world.transition.happening = true
             world.transition.callback = function ()
                 local ck = ent.checkpoint
                 ent.position = ck.position:copy()-- + vector(ck.collider.w / 2, ck.collider.h / 2)
                 ent.past_position = ent.position:copy()
-                print(ent.position, ck.position)
                 ent.gravity_acceleration = 0
                 ent.velocity = vector(0, 0)
                 ent.acceleration = 64
+                ent.on_transition = false
+
+                world.level.world:move(ent, ent.position.x, ent.position.y, self.fake_filter)
             end
             
         end
@@ -312,6 +411,10 @@ local movement = {
     end,
 
     collision_filter = function(a, b)
+        if (a.on_transition) then
+            return "cross"
+        end
+
         if (a.type == "Player" and b.type == "Checkpoint") then
             a.checkpoint = b
             return "cross"
@@ -357,8 +460,9 @@ local listener = {
     
     process = function (self, ent, _, world)
         local x, y = ent.position:unpack()
-        la.setPosition(x + world.level.x, y + world.level.y)
-        la.setVolume(2)
+        la.setPosition(x + world.level.x, y + world.level.y, 0)
+        la.setVolume(State.MUTED and 0 or 1)
+        la.setDistanceModel("linearclamped")
         --la.setVelocity((ent.position - ent.past_position):unpack())
     end
 }
@@ -380,6 +484,7 @@ local gravity = {
 }
 
 local out = {
+    blank, particle_spawner, particle,
     speaker, door, player, lightbulb, bullet,
     enemy, slime, gravity, movement, listener
 }
