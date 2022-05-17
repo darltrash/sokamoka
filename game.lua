@@ -153,7 +153,7 @@ return {
     draw = function (self, delta)
         local BLACK = {lume.color("#433455")}
         local WHITE = {lume.color("#c5ccb8")}
-        local CLEAR = self.level.Tint or {1, 1, 1, 1}
+        local CLEAR = {1, 1, 1, 1}
         
         local w, h = lg.getWidth(), lg.getHeight()
 
@@ -163,7 +163,7 @@ return {
             lg.setCanvas(self.main_canvas, self.light_canvas)
             lg.clear()
             lg.setShader(assets.shaders.main)
-            lg.setColor(CLEAR)
+            lg.setColor(self.level.Tint or CLEAR)
 
             self.camera.scale = lume.lerp(self.camera.scale, math.floor(math.min(w, h)/100), delta*16)
             local s = math.max(1, self.camera.scale)
@@ -173,7 +173,6 @@ return {
                 lume.round(-self.camera.real.y+(h/s/2), 1/s)
             )
             lg.rotate(lm.noise(State.timer*0.1)*0.025)
-            lg.setColor(self.level.Tint)
             lg.setFont(assets.font1)
             
             local ts = (math.floor(s) > 1) and 0.5 or 1
@@ -239,14 +238,12 @@ return {
                         lg.setLineWidth(0.5)
                         lg.rectangle("line", p.x+1, p.y+1, 6, 6)
                         lg.print("S", p.x+3, p.y, 0, ts)
-                        
-                        lg.setColor(self.level.Tint)
                     end
                     
                     if not ent.invisible then 
                         -- TODO: Fix vector.zero! apparently it doesnt stay as zero lol
                     
-                        lg.setColor(ent.Tint or CLEAR)
+                        lg.setColor(ent.Tint or self.level.Tint or CLEAR)
 
                         if ent.sprite then
                             local x, y = (lerped_position + (ent.sprite_offset or vector(0, 0, 0))):unpack()
@@ -264,6 +261,7 @@ return {
                                 end
                             end
 
+                            assets.shaders.main:send("threshold", 1)
                             lg.setBlendMode(ent.blend or "alpha", ent.blend=="multiply" and "premultiplied" or nil)
                             if ent.quad then
                                 lg.draw(ent.sprite, ent.quad, x+cx, y+cy, r, sx, sy, cx, cy)
@@ -277,6 +275,7 @@ return {
 
             if self.level.Name then
                 lg.setColor(WHITE)
+                lg.setBlendMode("alpha")
                 lg.print(self.level.Name, 4, -3, 0, ts, ts)
             end
 
@@ -289,7 +288,7 @@ return {
 
             lg.setShader(assets.shaders.blur)
             lg.setBlendMode("add")
-            lg.setColor(1, 1, 1, 0.5)
+            lg.setColor(1, 1, 1, 1/4/3)
             for i = 1, 4 do
                 local x, y = lume.vector((i/4)*math.pi, 1.5)
                 assets.shaders.blur:send("direction_mip", {x, y, 0})

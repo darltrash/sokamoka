@@ -11,9 +11,9 @@
         vec4 screen = Texel(MainTex, VaryingTexCoord.xy) * VaryingColor;
 
 		vec3 tex = screen.rgb;
-		float bright = dot(tex, luma);
+		float bright = dot(tex, luma) * screen.a;
 
-        love_Canvases[0] = screen;
-        love_Canvases[1] = mix(screen, vec4(0.0), step(bright, threshold));
+        love_Canvases[0] = mix(vec4(0.0), screen, step(bright, threshold));
+        love_Canvases[1] = mix(screen, vec4(0.0, 0.0, 0.0, screen.a), step(bright, threshold));
     }
 #endif

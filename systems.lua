@@ -42,6 +42,8 @@ local blank = {
             _, _, w, h = ent.quad:getViewport()
         end
 
+        ent.shine = ent.Shine or 1
+
         ent.scale = vector(ent.collider.w / w, ent.collider.h / h)
         ent.blend = (ent.Blend or "alpha"):lower()
         if ent.Tint then

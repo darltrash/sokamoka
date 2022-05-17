@@ -10,7 +10,7 @@
 	},
 	"jsonVersion": "1.1.3",
 	"appBuildId": 458364,
-	"nextUid": 57,
+	"nextUid": 59,
 	"identifierStyle": "Capitalize",
 	"worldLayout": "Free",
 	"worldGridWidth": 256,
@@ -679,9 +679,9 @@
 			"resizableY": true,
 			"keepAspectRatio": false,
 			"tileOpacity": 1,
-			"fillOpacity": 0.08,
-			"lineOpacity": 0,
-			"hollow": true,
+			"fillOpacity": 0.28,
+			"lineOpacity": 1,
+			"hollow": false,
 			"color": "#E7E7E7",
 			"renderMode": "Tile",
 			"showName": true,
@@ -822,6 +822,35 @@
 					"arrayMinLength": null,
 					"arrayMaxLength": null,
 					"editorDisplayMode": "NameAndValue",
+					"editorDisplayPos": "Above",
+					"editorAlwaysShow": false,
+					"editorCutLongValues": true,
+					"editorTextSuffix": null,
+					"editorTextPrefix": null,
+					"useForSmartColor": false,
+					"min": 0,
+					"max": 1,
+					"regex": null,
+					"acceptFileTypes": null,
+					"defaultOverride": { "id": "V_Float", "params": [1] },
+					"textLanguageMode": null,
+					"symmetricalRef": false,
+					"autoChainRef": true,
+					"allowOutOfLevelRef": true,
+					"allowedRefs": "OnlySame",
+					"allowedRefTags": [],
+					"tilesetUid": null
+				},
+				{
+					"identifier": "Shine",
+					"__type": "Float",
+					"uid": 58,
+					"type": "F_Float",
+					"isArray": false,
+					"canBeNull": true,
+					"arrayMinLength": null,
+					"arrayMaxLength": null,
+					"editorDisplayMode": "Hidden",
 					"editorDisplayPos": "Above",
 					"editorAlwaysShow": false,
 					"editorCutLongValues": true,
@@ -1046,6 +1075,35 @@
 					"allowedRefs": "OnlySame",
 					"allowedRefTags": [],
 					"tilesetUid": null
+				},
+				{
+					"identifier": "Shine",
+					"__type": "Float",
+					"uid": 57,
+					"type": "F_Float",
+					"isArray": false,
+					"canBeNull": false,
+					"arrayMinLength": null,
+					"arrayMaxLength": null,
+					"editorDisplayMode": "Hidden",
+					"editorDisplayPos": "Above",
+					"editorAlwaysShow": false,
+					"editorCutLongValues": true,
+					"editorTextSuffix": null,
+					"editorTextPrefix": null,
+					"useForSmartColor": false,
+					"min": 0,
+					"max": 1,
+					"regex": null,
+					"acceptFileTypes": null,
+					"defaultOverride": { "id": "V_Float", "params": [1] },
+					"textLanguageMode": null,
+					"symmetricalRef": false,
+					"autoChainRef": true,
+					"allowOutOfLevelRef": true,
+					"allowedRefs": "OnlySame",
+					"allowedRefTags": [],
+					"tilesetUid": null
 				}
 			]
 		}
@@ -1230,7 +1288,7 @@
 									"entityIid": "4bde45e1-b4d0-11ec-9c15-dbdd9e2c2a07",
 									"layerIid": "4bde45e0-b4d0-11ec-9c15-ffcefbb274a6",
 									"levelIid": "4bde1ed0-b4d0-11ec-9c15-77994256b836",
-									"worldIid": "eb38acc0-b4d0-11ec-abe6-c1f737bc3199"
+									"worldIid": "3d0619e0-b4d0-11ec-b6bd-75131d0086af"
 								}, "__type": "EntityRef", "__tile": null, "defUid": 10, "realEditorValues": [{
 									"id": "V_String",
 									"params": ["4bde45e1-b4d0-11ec-9c15-dbdd9e2c2a07"]
@@ -1556,7 +1614,7 @@
 									"entityIid": "a3f76a10-b4d0-11ec-ac78-11169a522525",
 									"layerIid": "fab444a0-b4d0-11ec-ac78-73dbf664d5e4",
 									"levelIid": "821ebf60-b4d0-11ec-86c8-5d703578be16",
-									"worldIid": "e57dc1a0-b4d0-11ec-929a-eb29075b4026"
+									"worldIid": "3d0619e0-b4d0-11ec-b6bd-75131d0086af"
 								}, "__type": "EntityRef", "__tile": null, "defUid": 10, "realEditorValues": [{
 									"id": "V_String",
 									"params": ["a3f76a10-b4d0-11ec-ac78-11169a522525"]
@@ -1735,7 +1793,7 @@
 									"entityIid": "4858e300-b4d0-11ec-a399-770308dd526e",
 									"layerIid": "e79fd6e1-b4d0-11ec-a399-f5be7ae5d1dd",
 									"levelIid": "e79fd6e0-b4d0-11ec-a399-c3f92d60fe7f",
-									"worldIid": "e57dc1a0-b4d0-11ec-929a-eb29075b4026"
+									"worldIid": "3d0619e0-b4d0-11ec-b6bd-75131d0086af"
 								}, "__type": "EntityRef", "__tile": null, "defUid": 10, "realEditorValues": [{
 									"id": "V_String",
 									"params": ["4858e300-b4d0-11ec-a399-770308dd526e"]
@@ -1962,7 +2020,7 @@
 									"entityIid": "d417d6e0-b4d0-11ec-a399-cbd8be68fc1e",
 									"layerIid": "4bde45e0-b4d0-11ec-9c15-ffcefbb274a6",
 									"levelIid": "4bde1ed0-b4d0-11ec-9c15-77994256b836",
-									"worldIid": "e57dc1a0-b4d0-11ec-929a-eb29075b4026"
+									"worldIid": "3d0619e0-b4d0-11ec-b6bd-75131d0086af"
 								}, "__type": "EntityRef", "__tile": null, "defUid": 10, "realEditorValues": [{
 									"id": "V_String",
 									"params": ["d417d6e0-b4d0-11ec-a399-cbd8be68fc1e"]
@@ -1990,7 +2048,7 @@
 									"entityIid": "e53358d0-b4d0-11ec-a399-0b1cac0cdf90",
 									"layerIid": "c41c4710-b4d0-11ec-a399-7fc9a80ed7ff",
 									"levelIid": "c41c2000-b4d0-11ec-a399-59e27e435f07",
-									"worldIid": "e57dc1a0-b4d0-11ec-929a-eb29075b4026"
+									"worldIid": "3d0619e0-b4d0-11ec-b6bd-75131d0086af"
 								}, "__type": "EntityRef", "__tile": null, "defUid": 10, "realEditorValues": [{
 									"id": "V_String",
 									"params": ["e53358d0-b4d0-11ec-a399-0b1cac0cdf90"]
@@ -2357,7 +2415,7 @@
 			"externalRelPath": null,
 			"fieldInstances": [
 				{ "__identifier": "Name", "__value": null, "__type": "String", "__tile": null, "defUid": 7, "realEditorValues": [] },
-				{ "__identifier": "Tint", "__value": "#FFFFFF", "__type": "Color", "__tile": null, "defUid": 18, "realEditorValues": [] }
+				{ "__identifier": "Tint", "__value": "#FFFFFF", "__type": "Color", "__tile": null, "defUid": 18, "realEditorValues": [null] }
 			],
 			"layerInstances": [
 				{
@@ -2459,7 +2517,7 @@
 									"entityIid": "71bf0800-b4d0-11ec-a399-e3cb4bfde1d7",
 									"layerIid": "e79fd6e1-b4d0-11ec-a399-f5be7ae5d1dd",
 									"levelIid": "e79fd6e0-b4d0-11ec-a399-c3f92d60fe7f",
-									"worldIid": "dcd57df0-b4d0-11ec-af1e-497c29a508d1"
+									"worldIid": "3d0619e0-b4d0-11ec-b6bd-75131d0086af"
 								}, "__type": "EntityRef", "__tile": null, "defUid": 10, "realEditorValues": [{
 									"id": "V_String",
 									"params": ["71bf0800-b4d0-11ec-a399-e3cb4bfde1d7"]
@@ -2512,7 +2570,8 @@
 								{ "__identifier": "Lifespan", "__value": 10, "__type": "Float", "__tile": null, "defUid": 53, "realEditorValues": [{ "id": "V_Float", "params": [10] }] },
 								{ "__identifier": "Sprite", "__value": { "tilesetUid": 3, "x": 8, "y": 48, "w": 8, "h": 8 }, "__type": "Tile", "__tile": null, "defUid": 54, "realEditorValues": [] },
 								{ "__identifier": "Frequency", "__value": 1, "__type": "Float", "__tile": null, "defUid": 55, "realEditorValues": [{ "id": "V_Float", "params": [1] }] },
-								{ "__identifier": "Rate", "__value": 1, "__type": "Int", "__tile": null, "defUid": 56, "realEditorValues": [] }
+								{ "__identifier": "Rate", "__value": 2, "__type": "Int", "__tile": null, "defUid": 56, "realEditorValues": [{ "id": "V_Int", "params": [2] }] },
+								{ "__identifier": "Shine", "__value": 1, "__type": "Float", "__tile": null, "defUid": 57, "realEditorValues": [] }
 							]
 						}
 					]
@@ -2708,7 +2767,7 @@
 									"entityIid": "7142ac10-b4d0-11ec-a399-dd5e8506d17f",
 									"layerIid": "e79fd6e1-b4d0-11ec-a399-f5be7ae5d1dd",
 									"levelIid": "e79fd6e0-b4d0-11ec-a399-c3f92d60fe7f",
-									"worldIid": "dcd57df0-b4d0-11ec-af1e-497c29a508d1"
+									"worldIid": "3d0619e0-b4d0-11ec-b6bd-75131d0086af"
 								}, "__type": "EntityRef", "__tile": null, "defUid": 10, "realEditorValues": [{
 									"id": "V_String",
 									"params": ["7142ac10-b4d0-11ec-a399-dd5e8506d17f"]
@@ -2914,7 +2973,8 @@
 									"params": [ true ]
 								}] },
 								{ "__identifier": "Blend", "__value": null, "__type": "LocalEnum.Blend", "__tile": null, "defUid": 48, "realEditorValues": [] },
-								{ "__identifier": "Alpha", "__value": 1, "__type": "Float", "__tile": null, "defUid": 49, "realEditorValues": [] }
+								{ "__identifier": "Alpha", "__value": 1, "__type": "Float", "__tile": null, "defUid": 49, "realEditorValues": [] },
+								{ "__identifier": "Shine", "__value": 1, "__type": "Float", "__tile": null, "defUid": 58, "realEditorValues": [] }
 							]
 						},
 						{
@@ -2940,7 +3000,8 @@
 									"params": [ true ]
 								}] },
 								{ "__identifier": "Blend", "__value": null, "__type": "LocalEnum.Blend", "__tile": null, "defUid": 48, "realEditorValues": [] },
-								{ "__identifier": "Alpha", "__value": 1, "__type": "Float", "__tile": null, "defUid": 49, "realEditorValues": [] }
+								{ "__identifier": "Alpha", "__value": 1, "__type": "Float", "__tile": null, "defUid": 49, "realEditorValues": [] },
+								{ "__identifier": "Shine", "__value": 1, "__type": "Float", "__tile": null, "defUid": 58, "realEditorValues": [] }
 							]
 						},
 						{
@@ -2966,7 +3027,8 @@
 									"params": [ true ]
 								}] },
 								{ "__identifier": "Blend", "__value": null, "__type": "LocalEnum.Blend", "__tile": null, "defUid": 48, "realEditorValues": [] },
-								{ "__identifier": "Alpha", "__value": 1, "__type": "Float", "__tile": null, "defUid": 49, "realEditorValues": [] }
+								{ "__identifier": "Alpha", "__value": 1, "__type": "Float", "__tile": null, "defUid": 49, "realEditorValues": [] },
+								{ "__identifier": "Shine", "__value": 1, "__type": "Float", "__tile": null, "defUid": 58, "realEditorValues": [] }
 							]
 						}
 					]
@@ -3418,7 +3480,7 @@
 									"entityIid": "29a15c00-b4d0-11ec-a68b-cdbd5699eaa9",
 									"layerIid": "c41c4710-b4d0-11ec-a399-7fc9a80ed7ff",
 									"levelIid": "c41c2000-b4d0-11ec-a399-59e27e435f07",
-									"worldIid": "dcd57df0-b4d0-11ec-af1e-497c29a508d1"
+									"worldIid": "3d0619e0-b4d0-11ec-b6bd-75131d0086af"
 								}, "__type": "EntityRef", "__tile": null, "defUid": 10, "realEditorValues": [{
 									"id": "V_String",
 									"params": ["29a15c00-b4d0-11ec-a68b-cdbd5699eaa9"]
@@ -3576,7 +3638,7 @@
 									"entityIid": "6c02ca10-b4d0-11ec-a033-b14795f9d463",
 									"layerIid": "2dd19dc1-b4d0-11ec-a033-338ef7d83d79",
 									"levelIid": "2dd19dc0-b4d0-11ec-a033-ab42bc0276f2",
-									"worldIid": "dcd57df0-b4d0-11ec-af1e-497c29a508d1"
+									"worldIid": "3d0619e0-b4d0-11ec-b6bd-75131d0086af"
 								}, "__type": "EntityRef", "__tile": null, "defUid": 10, "realEditorValues": [{
 									"id": "V_String",
 									"params": ["6c02ca10-b4d0-11ec-a033-b14795f9d463"]
@@ -3840,7 +3902,7 @@
 									"entityIid": "fcf62190-b4d0-11ec-846d-4b2895a67906",
 									"layerIid": "155f3e50-b4d0-11ec-a68b-c9a5ba5e2ada",
 									"levelIid": "155f1740-b4d0-11ec-a68b-db25bfc13efb",
-									"worldIid": "dcd57df0-b4d0-11ec-af1e-497c29a508d1"
+									"worldIid": "b8ac2760-b4d0-11ec-9096-91c019461cfc"
 								}, "__type": "EntityRef", "__tile": null, "defUid": 10, "realEditorValues": [{
 									"id": "V_String",
 									"params": ["fcf62190-b4d0-11ec-846d-4b2895a67906"]
@@ -3875,7 +3937,8 @@
 									"id": "V_String",
 									"params": ["Add"]
 								}] },
-								{ "__identifier": "Alpha", "__value": 0.4, "__type": "Float", "__tile": null, "defUid": 49, "realEditorValues": [{ "id": "V_Float", "params": [0.4] }] }
+								{ "__identifier": "Alpha", "__value": 0.4, "__type": "Float", "__tile": null, "defUid": 49, "realEditorValues": [{ "id": "V_Float", "params": [0.4] }] },
+								{ "__identifier": "Shine", "__value": 0, "__type": "Float", "__tile": null, "defUid": 58, "realEditorValues": [{ "id": "V_Float", "params": [0] }] }
 							]
 						},
 						{
@@ -3952,7 +4015,8 @@
 								{ "__identifier": "Lifespan", "__value": 20, "__type": "Float", "__tile": null, "defUid": 53, "realEditorValues": [{ "id": "V_Float", "params": [20] }] },
 								{ "__identifier": "Sprite", "__value": { "tilesetUid": 3, "x": 8, "y": 48, "w": 8, "h": 8 }, "__type": "Tile", "__tile": null, "defUid": 54, "realEditorValues": [] },
 								{ "__identifier": "Frequency", "__value": 0.2, "__type": "Float", "__tile": null, "defUid": 55, "realEditorValues": [{ "id": "V_Float", "params": [0.2] }] },
-								{ "__identifier": "Rate", "__value": 2, "__type": "Int", "__tile": null, "defUid": 56, "realEditorValues": [{ "id": "V_Int", "params": [2] }] }
+								{ "__identifier": "Rate", "__value": 2, "__type": "Int", "__tile": null, "defUid": 56, "realEditorValues": [{ "id": "V_Int", "params": [2] }] },
+								{ "__identifier": "Shine", "__value": 0, "__type": "Float", "__tile": null, "defUid": 57, "realEditorValues": [{ "id": "V_Float", "params": [0] }] }
 							]
 						}
 					]

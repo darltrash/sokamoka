@@ -55,6 +55,7 @@ function love.load(...)
     love.window.setTitle("")
     love.window.setMode(800, 600, {
         resizable = true,
+        vsync = 0
     })
 end
 
@@ -87,6 +88,7 @@ end
 function love.draw()
     lg.reset()
     current:draw(lt.getDelta())
+    profi:reset()
 end
 
 function love.quit()
