@@ -5,8 +5,6 @@ local assets = require "assets"
 
 local atlas = assets.atlas0
 
-local mod = function(x, i) return x % i end
-
 local lightbulb = {
     filter = function (self, ent)
         return ent.type == "LightBulb"
@@ -70,7 +68,7 @@ local particle = {
 
     process = function (self, ent, delta)
         local l = ent.life/ent.lifespan
-        local d = math.abs(mod(l + 0.5, 1) - 0.5) *2
+        local d = math.abs(((l + 0.5) % 1) - 0.5) *2
         --ent.Tint[4] 
         --if ent.sus then
         --    print(ent.Tint[4])
@@ -173,10 +171,10 @@ local door = {
                     snd:play()
                 end
             
-                world.player.position = vector.from_table(ent.Door.position)
+                world.player.checkpoint = ent.Door
+                world.player.position = vector.copy(ent.Door.position)
                 world.camera.real = world.player.position:copy()
                 world:load_level(ent.Door.in_level)
-                world.player.checkpoint = ent.Door
             end
         end
     end
@@ -312,7 +310,7 @@ local player = {
                 ent.anim_counter = 2
             end
             
-            ent.anim_counter = ent.anim_counter + delta * 5
+            ent.anim_counter = ent.anim_counter + delta * ent.acceleration * 0.1
             ent.moving = true
         else
             ent.acceleration = 64
@@ -347,7 +345,9 @@ local player = {
                 ent.double_jumped = true
                 
                 assets.steps:play()
-                assets.steps:setPosition((ent.position + world.level.position + ent.velocity * delta):unpack())
+                assets.steps:setPosition(
+                    (ent.position + world.level.position + ent.velocity * delta):unpack()
+                )
             end
         else
             ent.double_jumped = false
@@ -359,12 +359,22 @@ local player = {
         
         ent.velocity.x = lume.lerp(ent.velocity.x, velocity.x, delta*6)
         
-        if (q == 2 or q == 4) and self.past_quad ~= q then
-            assets.steps:play()
-            assets.steps:setPosition((ent.position + world.level.position + ent.velocity * delta):unpack())
+        local y_offset = 0
+        if (q == 2 or q == 4)  then
+            if ent.past_quad ~= q then
+                assets.steps:play()
+                assets.steps:setPosition(
+                    (ent.position + world.level.position + ent.velocity * delta):unpack()
+                )
+            end
+
+            if ent.collider.against_ground then
+                y_offset = -1
+            end
         end
-        self.past_quad = q
+        ent.past_quad = q
         
+        ent.sprite_offset.y = lume.lerp(ent.sprite_offset.y, y_offset, delta*22) 
         --if lc.isDown(1) then
         --    local window = vector(lg.getDimensions()) / world.camera.scale / 2
         --    local mouse = vector(lc.getX(), lc.getY()) / world.camera.scale

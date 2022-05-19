@@ -208,6 +208,8 @@ return {
                         self.camera.real = self.camera.real:lerp(lerped_position, delta*4)
                     end
                     
+                    assets.shaders.main:send("threshold", 1)
+                    lg.setBlendMode("alpha")
                     if ent.interactable and ent.position and self.player then
                         local a = ent.interaction_area or 32
                         local off = (ent.indicator_offset or vector(0, 0, 0))
@@ -320,7 +322,7 @@ return {
                     for x = 0, math.ceil(w/s/16) do
                         for y = 0, math.ceil(h/s/16) do
                             local rs = self.transition.alpha*13
-                            local s = 3+(self.transition.alpha*8)
+                            local s = 3+(self.transition.alpha*5)
                         
                             lg.circle("fill", ox-(x*16), oy-(y*16), rs, s)
                             lg.circle("line", ox-(x*16), oy-(y*16), rs, s)

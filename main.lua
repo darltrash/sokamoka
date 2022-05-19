@@ -25,7 +25,8 @@ State = {
 
 local current
 local states = {
-    [1] = require("game")
+    [1] = require("game"),
+    [2] = require("credits")
 }
 
 State.set_state = function (s, ...)
