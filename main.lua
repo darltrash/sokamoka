@@ -20,7 +20,10 @@ State = {
     
     PROFILE = "1" == os.getenv("SOKA_PROFILE"),
     DEBUG   = "1" == os.getenv("SOKA_DEBUG"),
-    MUTED   = "1" == os.getenv("SOKA_MUTED")
+    MUTED   = "1" == os.getenv("SOKA_MUTED"),
+    SHOWFPS = "1" == os.getenv("SOKA_SHOW_FPS"),
+    FCOMPAT = "1" == os.getenv("SOKA_FORCE_COMPAT"),
+    NOVSYNC = "1" == os.getenv("SOKA_NO_VSYNC")
 }
 
 local current
@@ -56,7 +59,7 @@ function love.load(...)
     love.window.setTitle("")
     love.window.setMode(800, 600, {
         resizable = true,
-        vsync = 0
+        vsync = State.NOVSYNC and 0 or 1
     })
 end
 
@@ -89,7 +92,10 @@ end
 function love.draw()
     lg.reset()
     current:draw(lt.getDelta())
-    profi:reset()
+
+    if State.PROFILE then
+        profi:reset()
+    end
 end
 
 function love.quit()

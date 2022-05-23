@@ -9,6 +9,6 @@
 		vec3 tex = screen.rgb;
 		float bright = dot(tex, luma);
 
-		return mix(screen, vec4(0.0), step(bright, threshold));
+		return mix(screen, vec4(0.0, 0.0, 0.0, screen.a), step(bright, threshold));
 	}
 #endif

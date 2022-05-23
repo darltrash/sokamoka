@@ -7,6 +7,16 @@ local log     = require "lib.log"
 local bump    = require "lib.bump"
 local input   = require "input"
 
+local BLACK = {lume.color("#433455")}
+local WHITE = {lume.color("#c5ccb8")}
+local CLEAR = {1, 1, 1, 1}
+
+local COMPAT = lg.getSystemLimits().multicanvas < 2
+
+if COMPAT then
+    log.warn("Multiple canvas unsupported! Compat mode enabled.")
+end
+
 return {
     camera = {
         scale = 2,
@@ -68,6 +78,13 @@ return {
     end,
 
     load_level = function(self, level)
+        if self.level then
+            if self.level.baked then
+                self.level.baked:release()
+                self.level.baked = nil
+            end
+        end
+
         local lev = self.map[level]
         if not lev then
             return log.fatal("Level '%s' not available!", level)
@@ -150,34 +167,130 @@ return {
         self.level.entities = _entities
     end,
 
-    draw = function (self, delta)
-        local BLACK = {lume.color("#433455")}
-        local WHITE = {lume.color("#c5ccb8")}
-        local CLEAR = {1, 1, 1, 1}
-        
+    main_draw = function (self, delta)
         local w, h = lg.getWidth(), lg.getHeight()
 
-        do  
-            lg.push()
+        lg.setColor(self.level.Tint or CLEAR)
 
-            lg.setCanvas(self.main_canvas, self.light_canvas)
-            lg.clear()
-            lg.setShader(assets.shaders.main)
-            lg.setColor(self.level.Tint or CLEAR)
+        self.camera.scale = lume.lerp(self.camera.scale, math.floor(math.min(w, h)/100), delta*16)
+        local s = math.max(1, self.camera.scale)
+        lg.scale(s)
+        lg.translate(
+            lume.round(-self.camera.real.x+(w/s/2), 1/s), 
+            lume.round(-self.camera.real.y+(h/s/2), 1/s)
+        )
+        lg.rotate(lm.noise(State.timer*0.1)*0.025)
+        lg.setFont(assets.font1)
+        
+        local ts = (math.floor(s) > 1) and 0.5 or 1
+        
+        assets.shaders.main:send("threshold", 1)
+        lg.draw(self.level.baked)
+    
+        local alpha = lume.clamp(State.lag / State.timestep, 0, 1)
+        
+        if self.transition.happening then alpha = 1 end
+        State.alpha = alpha
+        
+        for _, ent in ipairs(self.level.entities) do
+            if vector.is_vector(ent.position) then
+                local lerped_position = (ent.past_position or ent.position):lerp(ent.position, alpha)
+                
+                if State.DEBUG and ent.collider then
+                    lg.rectangle("fill", lerped_position.x, lerped_position.y, ent.collider.w, ent.collider.h)
+                end
+                
+                if ent.camera_target then
+                    self.camera.real = self.camera.real:lerp(lerped_position, delta*4)
+                end
+                
+                if not COMPAT then
+                    assets.shaders.main:send("threshold", 1)
+                end
+                lg.setBlendMode("alpha")
+                if ent.interactable and ent.position and self.player then
+                    local a = ent.interaction_area or 32
+                    local off = (ent.indicator_offset or vector(0, 0, 0))
+                    local dest = 0
+                    
+                    if (ent.position + off):dist(self.player.position) < a then
+                        dest = 1
+                        
+                        ent.interacting = input.just_pressed("down")
+                    end
+                    
+                    ent.interaction_alpha = lume.lerp(
+                        ent.interaction_alpha or 0, 
+                        dest, delta*3
+                    )
+                    local m = ent.interaction_alpha or 0 
+                    
+                    local p = ent.position + off
+                    p.x = p.x-lm.noise(State.timer)
+                    p.y = p.y-(10*m)-lm.noise(0, State.timer) 
+                    
+                    p = p:round(1/s)
+                    
+                    lg.setColor(BLACK[1], BLACK[2], BLACK[3], m)
+                    lg.rectangle("fill", p.x, p.y, 8, 8)
+                    
+                    lg.setColor(WHITE[1], WHITE[2], WHITE[3], m)
+                    lg.setLineWidth(0.5)
+                    lg.rectangle("line", p.x+1, p.y+1, 6, 6)
+                    lg.print("S", p.x+3, p.y, 0, ts)
+                end
+                
+                if not ent.invisible then 
+                    -- TODO: Fix vector.zero! apparently it doesnt stay as zero lol
+                
+                    lg.setColor(ent.Tint or self.level.Tint or CLEAR)
 
-            self.camera.scale = lume.lerp(self.camera.scale, math.floor(math.min(w, h)/100), delta*16)
-            local s = math.max(1, self.camera.scale)
-            lg.scale(s)
-            lg.translate(
-                lume.round(-self.camera.real.x+(w/s/2), 1/s), 
-                lume.round(-self.camera.real.y+(h/s/2), 1/s)
+                    if ent.sprite then
+                        local x, y = (lerped_position + (ent.sprite_offset or vector(0, 0, 0))):unpack()
+                        local sx, sy = (ent.scale  or vector.one ):unpack()
+                        local cx, cy = (ent.center or vector.zero):unpack()
+                        local r = ent.rotation or 0
+                        
+                        if ent.shine and not COMPAT then
+                            lg.setBlendMode("alpha")
+                            assets.shaders.main:send("threshold", ent.shine)
+                            if ent.quad then
+                                lg.draw(ent.sprite, ent.quad, x+cx, y+cy, r, sx, sy, cx, cy)
+                            else
+                                lg.draw(ent.sprite, x+cx, y+cy, r, sx, sy, cx, cy)
+                            end
+                        end
+
+                        if not COMPAT then
+                            assets.shaders.main:send("threshold", 1)
+                        end
+                        lg.setBlendMode(ent.blend or "alpha", ent.blend=="multiply" and "premultiplied" or nil)
+                        if ent.quad then
+                            lg.draw(ent.sprite, ent.quad, x+cx, y+cy, r, sx, sy, cx, cy)
+                        else
+                            lg.draw(ent.sprite, x+cx, y+cy, r, sx, sy, cx, cy)
+                        end
+                    end
+                end
+            end    
+        end
+
+        if self.level.Name then
+            lg.setColor(WHITE)
+            lg.setBlendMode("alpha")
+            lg.print(self.level.Name, 4, -3, 0, ts, ts)
+        end
+    end,
+
+    draw = function (self, delta)
+        local w, h = lg.getWidth(), lg.getHeight()
+
+        if not self.level.baked then
+            self.level.baked = lg.newCanvas(
+                self.level.width, self.level.height
             )
-            lg.rotate(lm.noise(State.timer*0.1)*0.025)
-            lg.setFont(assets.font1)
-            
-            local ts = (math.floor(s) > 1) and 0.5 or 1
-            
-            assets.shaders.main:send("threshold", 1)
+
+            lg.setCanvas(self.level.baked)
             for _, til in ipairs(self.level.tiles) do
                 local tileset = self.level.tiles.tileset
                 if not assets.cache[tileset] then
@@ -190,113 +303,41 @@ return {
                 
                 lg.draw(tileset, quad, til.x, til.y)
             end
-        
-            local alpha = lume.clamp(State.lag / State.timestep, 0, 1)
-            
-            if self.transition.happening then alpha = 1 end
-            State.alpha = alpha
-            
-            for _, ent in ipairs(self.level.entities) do
-                if vector.is_vector(ent.position) then
-                    local lerped_position = (ent.past_position or ent.position):lerp(ent.position, alpha)
-                    
-                    if State.DEBUG and ent.collider then
-                        lg.rectangle("fill", lerped_position.x, lerped_position.y, ent.collider.w, ent.collider.h)
-                    end
-                    
-                    if ent.camera_target then
-                        self.camera.real = self.camera.real:lerp(lerped_position, delta*4)
-                    end
-                    
-                    assets.shaders.main:send("threshold", 1)
-                    lg.setBlendMode("alpha")
-                    if ent.interactable and ent.position and self.player then
-                        local a = ent.interaction_area or 32
-                        local off = (ent.indicator_offset or vector(0, 0, 0))
-                        local dest = 0
-                        
-                        if (ent.position + off):dist(self.player.position) < a then
-                            dest = 1
-                            
-                            ent.interacting = input.just_pressed("down")
-                        end
-                        
-                        ent.interaction_alpha = lume.lerp(
-                            ent.interaction_alpha or 0, 
-                            dest, delta*3
-                        )
-                        local m = ent.interaction_alpha or 0 
-                        
-                        local p = ent.position + off
-                        p.x = p.x-lm.noise(State.timer)
-                        p.y = p.y-(10*m)-lm.noise(0, State.timer) 
-                        
-                        p = p:round(1/s)
-                        
-                        lg.setColor(BLACK[1], BLACK[2], BLACK[3], m)
-                        lg.rectangle("fill", p.x, p.y, 8, 8)
-                        
-                        lg.setColor(WHITE[1], WHITE[2], WHITE[3], m)
-                        lg.setLineWidth(0.5)
-                        lg.rectangle("line", p.x+1, p.y+1, 6, 6)
-                        lg.print("S", p.x+3, p.y, 0, ts)
-                    end
-                    
-                    if not ent.invisible then 
-                        -- TODO: Fix vector.zero! apparently it doesnt stay as zero lol
-                    
-                        lg.setColor(ent.Tint or self.level.Tint or CLEAR)
-
-                        if ent.sprite then
-                            local x, y = (lerped_position + (ent.sprite_offset or vector(0, 0, 0))):unpack()
-                            local sx, sy = (ent.scale  or vector.one ):unpack()
-                            local cx, cy = (ent.center or vector.zero):unpack()
-                            local r = ent.rotation or 0
-                            
-                            if ent.shine then
-                                lg.setBlendMode("alpha")
-                                assets.shaders.main:send("threshold", ent.shine)
-                                if ent.quad then
-                                    lg.draw(ent.sprite, ent.quad, x+cx, y+cy, r, sx, sy, cx, cy)
-                                else
-                                    lg.draw(ent.sprite, x+cx, y+cy, r, sx, sy, cx, cy)
-                                end
-                            end
-
-                            assets.shaders.main:send("threshold", 1)
-                            lg.setBlendMode(ent.blend or "alpha", ent.blend=="multiply" and "premultiplied" or nil)
-                            if ent.quad then
-                                lg.draw(ent.sprite, ent.quad, x+cx, y+cy, r, sx, sy, cx, cy)
-                            else
-                                lg.draw(ent.sprite, x+cx, y+cy, r, sx, sy, cx, cy)
-                            end
-                        end
-                    end
-                end    
-            end
-
-            if self.level.Name then
-                lg.setColor(WHITE)
-                lg.setBlendMode("alpha")
-                lg.print(self.level.Name, 4, -3, 0, ts, ts)
-            end
-
-            lg.setShader()
             lg.setCanvas()
+
+            self.level.baked:setFilter("nearest", "nearest")
+        end
+
+        do  
+            lg.push("all")
+            if COMPAT then
+                lg.setCanvas(self.main_canvas)
+                    lg.clear()
+                    self:main_draw(delta)
+
+            else
+                lg.setCanvas(self.main_canvas, self.light_canvas)
+                    lg.setShader(assets.shaders.main)
+                    lg.clear()
+
+                    self:main_draw(delta)
+            end
             lg.pop()
 
             lg.setColor(CLEAR)
             lg.draw(self.main_canvas)
 
-            lg.setShader(assets.shaders.blur)
-            lg.setBlendMode("add")
-            lg.setColor(1, 1, 1, 1/4/3)
-            for i = 1, 4 do
-                local x, y = lume.vector((i/4)*math.pi, 1.5)
-                assets.shaders.blur:send("direction_mip", {x, y, 0})
-                lg.draw(self.light_canvas)
+            if COMPAT then
+                lg.setShader(assets.shaders.blur)
+                lg.setBlendMode("add")
+                lg.setColor(1, 1, 1, 1/4/3)
+                for i = 1, 4 do
+                    local x, y = lume.vector((i/4)*math.pi, 1.5)
+                    assets.shaders.blur:send("direction_mip", {x, y, 0})
+                    lg.draw(self.light_canvas)
+                end
+                lg.setShader()
             end
-            lg.setShader()
 
         end
 
@@ -337,29 +378,59 @@ return {
                 lg.rectangle("fill", 0, 0, w, h)
             end
 
+            local debug_stack = {}
+            if State.SHOWFPS then
+                table.insert(
+                    debug_stack,
+                    ("FPS: %s"):format( lt.getFPS() )
+                )
+            end
+
             if State.DEBUG then
+                table.insert(
+                    debug_stack,
+                    ("delta: %s"):format( delta * 1000 )
+                )
+
+                table.insert(
+                    debug_stack,
+                    ("[ceil: %s, ground: %s, wall: %s]"):format(
+                        self.player.collider.against_ceil,
+                        self.player.collider.against_ground,
+                        self.player.collider.against_wall
+                    )
+                )
+
+                table.insert(
+                    debug_stack,
+                    ("[acceleration: %s]"):format(
+                        self.player.gravity_acceleration
+                    )
+                )
+
+                table.insert(
+                    debug_stack,
+                    ("[position: %s]"):format(
+                        self.player.position
+                    )
+                )
+
+                table.insert(
+                    debug_stack,
+                    ("[velocity: %s]"):format(
+                        self.player.velocity
+                    )
+                )
+            end
+
+            if #debug_stack > 0 then
                 lg.scale(2)
                 lg.setColor(WHITE)
             
                 lg.setFont(assets.font1)
-                lg.print(("%sms"):format(delta * 1000))
-                lg.print(("[ceil: %s, ground: %s, wall: %s]"):format(
-                    self.player.collider.against_ceil,
-                    self.player.collider.against_ground,
-                    self.player.collider.against_wall
-                ), 0, 10)
-                
-                lg.print(("[acceleration: %s]"):format(
-                    self.player.gravity_acceleration
-                ), 0, 20)
-                
-                lg.print(("[position: %s]"):format(
-                    tostring(self.player.position)
-                ), 0, 30)
-                
-                lg.print(("[velocity: %s]"):format(
-                    tostring(self.player.velocity)
-                ), 0, 40)
+                for k, v in ipairs(debug_stack) do
+                    lg.print(v, 0, (k-1)*10)
+                end
             end
         end
     end
