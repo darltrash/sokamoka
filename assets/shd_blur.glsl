@@ -5,6 +5,8 @@
 #endif
 
 #ifdef PIXEL
+	#define RAD 6.28318531 
+
 	uniform vec3 direction_mip = vec3(1.0, 1.0, 1.0);
 
 	vec4 blur5(Image image, vec2 uv, vec2 resolution, vec2 direction) {
@@ -44,6 +46,8 @@
 	}
 
 	vec4 effect(vec4 _, sampler2D tex, vec2 uv, vec2 sc) {
-		return blur9(tex, uv, love_ScreenSize.xy, direction_mip.xy);
+		vec4 color = blur9(tex, uv, love_ScreenSize.xy, direction_mip.xy);
+		color.r = blur9(tex, uv+(2/love_ScreenSize.xy), love_ScreenSize.xy, direction_mip.xy).r;
+		return color;
 	}
 #endif

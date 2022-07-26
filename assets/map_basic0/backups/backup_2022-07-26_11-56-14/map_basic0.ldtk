@@ -4599,16 +4599,10 @@
 									"params": ["0,56,8,8"]
 								}] },
 								{ "__identifier": "Tint", "__value": "#FF0000", "__type": "Color", "__tile": null, "defUid": 44, "realEditorValues": [{ "id": "V_Int", "params": [16711680] }] },
-								{ "__identifier": "Stretch", "__value": true, "__type": "Bool", "__tile": null, "defUid": 46, "realEditorValues": [{
-									"id": "V_Bool",
-									"params": [ true ]
-								}] },
-								{ "__identifier": "Blend", "__value": "Add", "__type": "LocalEnum.Blend", "__tile": null, "defUid": 48, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["Add"]
-								}] },
+								{ "__identifier": "Stretch", "__value": false, "__type": "Bool", "__tile": null, "defUid": 46, "realEditorValues": [] },
+								{ "__identifier": "Blend", "__value": null, "__type": "LocalEnum.Blend", "__tile": null, "defUid": 48, "realEditorValues": [] },
 								{ "__identifier": "Alpha", "__value": 1, "__type": "Float", "__tile": null, "defUid": 49, "realEditorValues": [] },
-								{ "__identifier": "Shine", "__value": 0, "__type": "Float", "__tile": null, "defUid": 58, "realEditorValues": [{ "id": "V_Float", "params": [0] }] }
+								{ "__identifier": "Shine", "__value": 1, "__type": "Float", "__tile": null, "defUid": 58, "realEditorValues": [] }
 							]
 						},
 						{
@@ -4629,16 +4623,10 @@
 									"params": ["0,56,8,8"]
 								}] },
 								{ "__identifier": "Tint", "__value": "#0000FF", "__type": "Color", "__tile": null, "defUid": 44, "realEditorValues": [{ "id": "V_Int", "params": [255] }] },
-								{ "__identifier": "Stretch", "__value": true, "__type": "Bool", "__tile": null, "defUid": 46, "realEditorValues": [{
-									"id": "V_Bool",
-									"params": [ true ]
-								}] },
-								{ "__identifier": "Blend", "__value": "Add", "__type": "LocalEnum.Blend", "__tile": null, "defUid": 48, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["Add"]
-								}] },
+								{ "__identifier": "Stretch", "__value": false, "__type": "Bool", "__tile": null, "defUid": 46, "realEditorValues": [] },
+								{ "__identifier": "Blend", "__value": null, "__type": "LocalEnum.Blend", "__tile": null, "defUid": 48, "realEditorValues": [] },
 								{ "__identifier": "Alpha", "__value": 1, "__type": "Float", "__tile": null, "defUid": 49, "realEditorValues": [] },
-								{ "__identifier": "Shine", "__value": 0, "__type": "Float", "__tile": null, "defUid": 58, "realEditorValues": [{ "id": "V_Float", "params": [0] }] }
+								{ "__identifier": "Shine", "__value": 1, "__type": "Float", "__tile": null, "defUid": 58, "realEditorValues": [] }
 							]
 						},
 						{
@@ -4659,16 +4647,10 @@
 									"params": ["0,56,8,8"]
 								}] },
 								{ "__identifier": "Tint", "__value": "#00FF00", "__type": "Color", "__tile": null, "defUid": 44, "realEditorValues": [{ "id": "V_Int", "params": [65280] }] },
-								{ "__identifier": "Stretch", "__value": true, "__type": "Bool", "__tile": null, "defUid": 46, "realEditorValues": [{
-									"id": "V_Bool",
-									"params": [ true ]
-								}] },
-								{ "__identifier": "Blend", "__value": "Add", "__type": "LocalEnum.Blend", "__tile": null, "defUid": 48, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["Add"]
-								}] },
+								{ "__identifier": "Stretch", "__value": false, "__type": "Bool", "__tile": null, "defUid": 46, "realEditorValues": [] },
+								{ "__identifier": "Blend", "__value": null, "__type": "LocalEnum.Blend", "__tile": null, "defUid": 48, "realEditorValues": [] },
 								{ "__identifier": "Alpha", "__value": 1, "__type": "Float", "__tile": null, "defUid": 49, "realEditorValues": [] },
-								{ "__identifier": "Shine", "__value": 0, "__type": "Float", "__tile": null, "defUid": 58, "realEditorValues": [{ "id": "V_Float", "params": [0] }] }
+								{ "__identifier": "Shine", "__value": 1, "__type": "Float", "__tile": null, "defUid": 58, "realEditorValues": [] }
 							]
 						}
 					]

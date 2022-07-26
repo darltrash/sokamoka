@@ -1,28 +1,34 @@
 local vector = require "lib.vector"
 
+local lk = love.keyboard
 local modes = {
     keyboard = {
         times = {},
         map = {
-            up = "w", down = "s", left = "a", right = "d", action = "e"
+            up     = {"w", "up"},
+            down   = {"s", "down"},
+            left   = {"a", "left"},
+            right  = {"d", "right"},
+            action = {"e", "return"}
         },
 
         get_direction = function (self)
             local vector = vector(0, 0)
+            local m = self.map
 
-            if love.keyboard.isDown(self.map.up) then
+            if lk.isDown(unpack(m.up)) then
                 vector.y = -1
             end
 
-            if love.keyboard.isDown(self.map.left) then
+            if lk.isDown(unpack(m.left)) then
                 vector.x = -1
             end
 
-            if love.keyboard.isDown(self.map.down) then
+            if lk.isDown(unpack(m.down)) then
                 vector.y = vector.y + 1
             end
 
-            if love.keyboard.isDown(self.map.right) then
+            if lk.isDown(unpack(m.right)) then
                 vector.x = vector.x + 1
             end
 
@@ -32,7 +38,7 @@ local modes = {
         update = function (self)
             local done
             for k, v in pairs(self.map) do
-                if love.keyboard.isDown(v) then
+                if lk.isDown(unpack(v)) then
                     self.times[k] = (self.times[k] or 0) +1
                     done = true
                 

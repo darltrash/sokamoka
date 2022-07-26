@@ -1,0 +1,5 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/darl/Projects/sokamoka_love'
+lua build_map.lua
+make: Leaving directory '/home/darl/Projects/sokamoka_love'
+ 

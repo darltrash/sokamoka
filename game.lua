@@ -243,7 +243,8 @@ return {
                 if not ent.invisible then 
                     -- TODO: Fix vector.zero! apparently it doesnt stay as zero lol
                 
-                    lg.setColor(ent.Tint or self.level.Tint or CLEAR)
+                    local color = ent.Tint or self.level.Tint or CLEAR
+                    lg.setColor(color[1], color[2], color[3], (ent.alpha or 1) * color[4])
 
                     if ent.sprite then
                         local x, y = (lerped_position + (ent.sprite_offset or vector(0, 0, 0))):unpack()
@@ -254,6 +255,7 @@ return {
                         if ent.shine and not COMPAT then
                             lg.setBlendMode("alpha")
                             assets.shaders.main:send("threshold", ent.shine)
+
                             if ent.quad then
                                 lg.draw(ent.sprite, ent.quad, x+cx, y+cy, r, sx, sy, cx, cy)
                             else
@@ -264,6 +266,7 @@ return {
                         if not COMPAT then
                             assets.shaders.main:send("threshold", 1)
                         end
+
                         lg.setBlendMode(ent.blend or "alpha", ent.blend=="multiply" and "premultiplied" or nil)
                         if ent.quad then
                             lg.draw(ent.sprite, ent.quad, x+cx, y+cy, r, sx, sy, cx, cy)
@@ -310,7 +313,7 @@ return {
 
         do  
             lg.push("all")
-            if COMPAT then
+            if false then
                 lg.setCanvas(self.main_canvas)
                     lg.clear()
                     self:main_draw(delta)
@@ -327,7 +330,7 @@ return {
             lg.setColor(CLEAR)
             lg.draw(self.main_canvas)
 
-            if COMPAT then
+            if not COMPAT then
                 lg.setShader(assets.shaders.blur)
                 lg.setBlendMode("add")
                 lg.setColor(1, 1, 1, 1/4/3)

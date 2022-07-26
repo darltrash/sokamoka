@@ -4608,7 +4608,7 @@
 									"params": ["Add"]
 								}] },
 								{ "__identifier": "Alpha", "__value": 1, "__type": "Float", "__tile": null, "defUid": 49, "realEditorValues": [] },
-								{ "__identifier": "Shine", "__value": 0, "__type": "Float", "__tile": null, "defUid": 58, "realEditorValues": [{ "id": "V_Float", "params": [0] }] }
+								{ "__identifier": "Shine", "__value": 1, "__type": "Float", "__tile": null, "defUid": 58, "realEditorValues": [] }
 							]
 						},
 						{
@@ -4638,7 +4638,7 @@
 									"params": ["Add"]
 								}] },
 								{ "__identifier": "Alpha", "__value": 1, "__type": "Float", "__tile": null, "defUid": 49, "realEditorValues": [] },
-								{ "__identifier": "Shine", "__value": 0, "__type": "Float", "__tile": null, "defUid": 58, "realEditorValues": [{ "id": "V_Float", "params": [0] }] }
+								{ "__identifier": "Shine", "__value": 1, "__type": "Float", "__tile": null, "defUid": 58, "realEditorValues": [] }
 							]
 						},
 						{
@@ -4668,7 +4668,7 @@
 									"params": ["Add"]
 								}] },
 								{ "__identifier": "Alpha", "__value": 1, "__type": "Float", "__tile": null, "defUid": 49, "realEditorValues": [] },
-								{ "__identifier": "Shine", "__value": 0, "__type": "Float", "__tile": null, "defUid": 58, "realEditorValues": [{ "id": "V_Float", "params": [0] }] }
+								{ "__identifier": "Shine", "__value": 1, "__type": "Float", "__tile": null, "defUid": 58, "realEditorValues": [] }
 							]
 						}
 					]

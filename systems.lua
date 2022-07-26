@@ -31,7 +31,7 @@ local lightbulb = {
 
 local blank = {
     filter = function (self, ent)
-        return ent.type == "Blank"
+        return ent.type == "Blank" or ent.type == "Bloom"
     end,
 
     setup = function (self, ent)
@@ -57,13 +57,11 @@ local particle = {
     end,
 
     setup = function (self, ent)
-        ent.life = 0
-        ent.Tint = ent.Tint or {1, 1, 1, 1}
+        ent.life = ent.life or 0
         local s = lm.random(50, 100)/100
         ent.scale = vector(s, s)
         ent.sprite_offset = vector(1, 1)
-        ent.shine = 0.1
-        ent.Tint[4] = 0.7
+        ent.alpha = 0.7
     end,
 
     process = function (self, ent, delta)
@@ -74,8 +72,8 @@ local particle = {
         --    print(ent.Tint[4])
         --end
         --ent.scale = ent.scale:lerp(ent.end_scale, l)
-        ent.scale.x = d
-        ent.scale.y = d
+        ent.scale.x = d * (ent.scale_end or 1)
+        ent.scale.y = d * (ent.scale_end or 1)
 
         ent.destroy = ent.life > ent.lifespan
         ent.life = ent.life + delta*4
@@ -96,20 +94,27 @@ local particle_spawner = {
         ent.collider = nil
     end,
 
+    particle_quads = {
+        lg.quad(8, 48, 8, 8, atlas:getWidth(), atlas:getHeight()),
+        lg.quad(8, 56, 8, 8, atlas:getWidth(), atlas:getHeight())
+    },
+
     process = function (self, ent, delta, world)
         if ent.timer > ent.Frequency then
-            ent.timer = 0
+            ent.timer = ((lm.random(0, 20))/100)*ent.Frequency
             for x=1, ent.Rate do
                 world:add_entity{
                     type = "Particle",
                     lifespan = ent.Lifespan, 
                     sprite = ent.sprite,
-                    quad = ent.quad,
+                    quad = lume.randomchoice(self.particle_quads),
                     blend = "add",
                     velocity = vector(
                         lume.vector(lm.random(0, 10), lm.random(50, 150)/100)
                     ),
                     Tint = ent.Color,
+                    shine = 0.1,
+                    alpha = 0.3,
                     position = ent.position + vector(
                         lm.random(ent.w), 
                         lm.random(ent.h)
@@ -266,6 +271,8 @@ local player = {
         lg.quad(48, 64, 16, 16, atlas:getWidth(), atlas:getHeight())
     },
     
+    PARTICLE_QUAD = lg.quad(0, 56, 8, 8, atlas:getWidth(), atlas:getHeight()),
+
     setup = function (self, ent, world)
         ent.quad = self.ANI_MAIN[1]
         ent.sprite = atlas
@@ -292,12 +299,41 @@ local player = {
     fake_filter = function ()
         return "cross"
     end,
+
+    cloud = function (self, ent, world, amount, range, offset)
+        for x=1, amount or 3 do
+            world:add_entity{
+                type = "Particle",
+                lifespan = 8,
+                life = 4,
+                sprite = ent.sprite,
+                quad = self.PARTICLE_QUAD,
+                sprite_offset = vector(4, 4),
+                center = vector(4, 4),
+                scale_end = 0.6,
+                velocity = vector(
+                    lume.vector(math.rad(lm.random(0, 360)), lm.random(50, 150)/50)
+                ),
+                position = ent.position + vector(-(range or 4) *2, 10) + (offset or vector.zero:copy())  
+                + vector(
+                    lm.random(range or 4), 
+                    0
+                ) * 3
+            }
+        end
+    end,
     
     process = function (self, ent, delta, world)
         ent.camera_target = true
+
         local velocity = input.get_direction() * ent.acceleration
 
         if math.abs(velocity.x) > 0 then
+            if lume.sign(velocity.x) ~= lume.sign(ent.velocity.x) and
+                ent.acceleration > 64.2 then
+                self:cloud(ent, world, ent.acceleration/20, 3, vector(-2, 0))
+            end
+
             ent.acceleration = math.min(ent.acceleration+delta, 128)
             
             if velocity.x>0 then
@@ -328,6 +364,11 @@ local player = {
         if input.holding("up") and ent.collider.against_ground then
             ent.velocity.y = -86
         end
+
+        if input.just_pressed("down") then
+            ent.velocity.y = 80
+            ent.gravity_acceleration = 20
+        end
         
         if not ent.collider.against_ground then
             if ent.velocity.y > 0 then
@@ -348,6 +389,8 @@ local player = {
                 assets.steps:setPosition(
                     (ent.position + world.level.position + ent.velocity * delta):unpack()
                 )
+                self:cloud(ent, world, 10)
+
             end
         else
             ent.double_jumped = false
