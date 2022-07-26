@@ -179,7 +179,7 @@ return {
             lume.round(-self.camera.real.x+(w/s/2), 1/s), 
             lume.round(-self.camera.real.y+(h/s/2), 1/s)
         )
-        lg.rotate(lm.noise(State.timer*0.1)*0.025)
+        lg.rotate((lm.noise(State.timer*0.1)-0.5)*0.01*s)
         lg.setFont(assets.font1)
         
         local ts = (math.floor(s) > 1) and 0.5 or 1
@@ -237,7 +237,7 @@ return {
                     lg.setColor(WHITE[1], WHITE[2], WHITE[3], m)
                     lg.setLineWidth(0.5)
                     lg.rectangle("line", p.x+1, p.y+1, 6, 6)
-                    lg.print("S", p.x+3, p.y, 0, ts)
+                    lg.polygon("fill", p.x+2, p.y+2, p.x+6, p.y+2, p.x+4, p.y+6)
                 end
                 
                 if not ent.invisible then 
