@@ -26,12 +26,15 @@ local a = {
     
     shaders = {
         lightpass = lg.newShader("assets/shd_lightpass.glsl"),
-        blur = lg.newShader("assets/shd_blur.glsl"),
-        main = lg.newShader("assets/shd_main.glsl")
+        blur = lg.newShader("assets/shd_blur.glsl")
     },
 
     cache = {}
 }
+
+if (lg.getSystemLimits().multicanvas < 2) then
+    a.shaders.main = lg.newShader("assets/shd_main.glsl")
+end
 
 for _, v in pairs(a.OST) do
     v:setLooping(true)
