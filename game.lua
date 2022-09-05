@@ -184,7 +184,9 @@ return {
         
         local ts = (math.floor(s) > 1) and 0.5 or 1
         
-        assets.shaders.main:send("threshold", 1)
+        if (not COMPAT) then
+            assets.shaders.main:send("threshold", 1)
+        end
         lg.draw(self.level.baked)
     
         local alpha = lume.clamp(State.lag / State.timestep, 0, 1)
