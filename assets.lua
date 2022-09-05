@@ -32,7 +32,7 @@ local a = {
     cache = {}
 }
 
-if (lg.getSystemLimits().multicanvas < 2) then
+if (lg.getSystemLimits().multicanvas > 2) then
     a.shaders.main = lg.newShader("assets/shd_main.glsl")
 end
 
