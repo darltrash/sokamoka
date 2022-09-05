@@ -313,7 +313,7 @@ return {
 
         do  
             lg.push("all")
-            if false then
+            if COMPAT then
                 lg.setCanvas(self.main_canvas)
                     lg.clear()
                     self:main_draw(delta)
