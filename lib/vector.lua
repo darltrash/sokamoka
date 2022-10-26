@@ -1,8 +1,29 @@
--- DaVec.lua: @darltrash's Vector library
+-- vec2.lua: A simple 2D vector library
 
-local vector = {}
+--[[
+    Copyright (c) 2022 Nelson Lopez
+    
+    This software is provided 'as-is', without any express or implied warranty. 
+    In no event will the authors be held liable for any damages arising from the use of this software.
+    
+    Permission is granted to anyone to use this software for any purpose, 
+    including commercial applications, and to alter it and redistribute it freely, 
+    subject to the following restrictions:
+
+    1. The origin of this software must not be misrepresented; 
+        you must not claim that you wrote the original software. 
+        If you use this software in a product, an acknowledgment 
+        in the product documentation would be appreciated but is not required.
+
+    2. Altered source versions must be plainly marked as such, 
+        and must not be misrepresented as being the original software.
+
+    3. This notice may not be removed or altered from any source distribution.
+]]
+
+local vector = { x = 0, y = 0 }
 vector.__index = vector
-vector.__type = "vector"
+vector.__type = "vec2"
 
 local function isVector(a)
     return getmetatable(a) == vector
@@ -12,7 +33,7 @@ vector.is_vector = isVector
 
 vector.new = function (x, y)
     return setmetatable(
-        { x = x, y = y, instance = true }, vector
+        { x = x, y = y }, vector
     )
 end
 
@@ -25,6 +46,20 @@ vector.from_angle = function (theta, magnitude)
          math.cos(theta)*magnitude,
         -math.sin(theta)*magnitude
     )
+end
+vector.from_table = function (t)
+    return vector.new(
+        tonumber(t.x) or 0,
+        tonumber(t.y) or 0
+    )
+end
+
+vector.from_array = function (array)
+    return vector.new(array[1], array[2])
+end
+
+vector.to_array = function (self)
+    return {self.x, self.y}
 end
 
 vector.to_angle = function (self)
@@ -41,29 +76,16 @@ vector.rotate = function (self, theta)
     )
 end
 
-vector.from_table = function (t)
-    assert(type(t) == "table", "Not a table!")
-    return vector.new(tonumber(t.x) or 0, tonumber(t.y) or 0)
-end
-
-vector.from_array = function (array)
-    return vector.new(array[1], array[2])
-end
-
-vector.to_array = function (self)
-    return {self.x, self.y}
-end
-
 vector.unpack = function (self)
     return self.x, self.y
 end
 
-vector.get_magnitude = function (self)
+vector.magnitude = function (self)
     return math.sqrt(self.x^2 + self.y^2)
 end
 
 vector.normalize = function (self)
-    local m = self:get_magnitude()
+    local m = self:magnitude()
     return m == 0 and self or (self / m)
 end
 
@@ -90,17 +112,17 @@ local lerp = function (a, b, t)
 end
 
 vector.clamp = function (a, min, max)
-  local minx, miny = min, min
-  if isVector(min) then
-    minx, miny = min:unpack()
-  end
-  
-  local maxx, maxy = max, max
-  if isVector(max) then
-    maxx, maxy = max:unpack()
-  end
-  
-  return vector.new(clamp(a.x, minx, maxx), clamp(a.y, miny, maxy))
+    local minx, miny = min, min
+    if isVector(min) then
+        minx, miny = min:unpack()
+    end
+    
+    local maxx, maxy = max, max
+    if isVector(max) then
+        maxx, maxy = max:unpack()
+    end
+    
+    return vector.new(clamp(a.x, minx, maxx), clamp(a.y, miny, maxy))
 end
 
 vector.lerp = function (a, b, t)
@@ -109,6 +131,7 @@ vector.lerp = function (a, b, t)
 end
 
 vector.round = function(a, b)
+    b = b or 1
     return isVector(b) and vector.new(math.floor((a.x/b.x) + .5)*b.x, math.floor((a.y/b.y) + .5)*b.y)
                         or vector.new(math.floor((a.x/b) + .5)*b, math.floor((a.y/b) + .5)*b)
 end
@@ -170,7 +193,7 @@ vector.__le = function (a, b)
 end
 
 vector.__tostring = function (a)
-    return ("vector(%s, %s)"):format(a.x, a.y)
+    return ("vec2(%s, %s)"):format(a.x, a.y)
 end
 
 vector.zero = vector.new(0, 0)

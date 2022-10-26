@@ -382,23 +382,10 @@ return {
             if self.transition.alpha > 1 then
                 lg.rectangle("fill", 0, 0, w, h)
             end
-
-            local debug_stack = {}
-            if State.SHOWFPS then
-                table.insert(
-                    debug_stack,
-                    ("FPS: %s"):format( lt.getFPS() )
-                )
-            end
-
+            
             if State.DEBUG then
                 table.insert(
-                    debug_stack,
-                    ("delta: %s"):format( delta * 1000 )
-                )
-
-                table.insert(
-                    debug_stack,
+                    State.debug_stack,
                     ("[ceil: %s, ground: %s, wall: %s]"):format(
                         self.player.collider.against_ceil,
                         self.player.collider.against_ground,
@@ -407,35 +394,25 @@ return {
                 )
 
                 table.insert(
-                    debug_stack,
+                    State.debug_stack,
                     ("[acceleration: %s]"):format(
                         self.player.gravity_acceleration
                     )
                 )
 
                 table.insert(
-                    debug_stack,
+                    State.debug_stack,
                     ("[position: %s]"):format(
                         self.player.position
                     )
                 )
 
                 table.insert(
-                    debug_stack,
+                    State.debug_stack,
                     ("[velocity: %s]"):format(
                         self.player.velocity
                     )
                 )
-            end
-
-            if #debug_stack > 0 then
-                lg.scale(2)
-                lg.setColor(WHITE)
-            
-                lg.setFont(assets.font1)
-                for k, v in ipairs(debug_stack) do
-                    lg.print(v, 0, (k-1)*10)
-                end
             end
         end
     end

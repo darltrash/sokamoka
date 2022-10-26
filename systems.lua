@@ -330,7 +330,7 @@ local player = {
 
         if math.abs(velocity.x) > 0 then
             if lume.sign(velocity.x) ~= lume.sign(ent.velocity.x) and
-                ent.acceleration > 64.2 then
+                ent.acceleration > 80 then
                 self:cloud(ent, world, ent.acceleration/20, 3, vector(-2, 0))
             end
 
@@ -349,7 +349,7 @@ local player = {
             ent.anim_counter = ent.anim_counter + delta * ent.acceleration * 0.1
             ent.moving = true
         else
-            ent.acceleration = 64
+            ent.acceleration = 80
             ent.anim_counter = 0
             ent.moving = false
         end

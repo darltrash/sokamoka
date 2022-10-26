@@ -1,16 +1,17 @@
+lg = love.graphics
+lm = love.math
+lc = love.mouse
+la = love.audio
+lt = love.timer
+
 NOOP = function() end
 local input = require "input"
 local log = require "lib.log"
 local lume = require "lib.lume"
 local profi = require "lib.profi"
+local assets = require "assets"
 log.usecolor = love.system.getOS() ~= "Windows"
-
-lg = love.graphics
 lg.quad = lume.memoize(lg.newQuad)
-lm = love.math
-lc = love.mouse
-la = love.audio
-lt = love.timer
 
 State = {
     timestep = 1/30,
@@ -18,6 +19,7 @@ State = {
     timer = 0,
     delta = 0,
     
+    STATE   = tonumber(os.getenv("SOKA_STATE")),
     PROFILE = "1" == os.getenv("SOKA_PROFILE"),
     DEBUG   = "1" == os.getenv("SOKA_DEBUG"),
     MUTED   = "1" == os.getenv("SOKA_MUTED"),
@@ -29,7 +31,8 @@ State = {
 local current
 local states = {
     [1] = require("game"),
-    [2] = require("credits")
+    [2] = require("credits"),
+    [99] = require("keything")
 }
 
 State.set_state = function (s, ...)
@@ -54,7 +57,7 @@ function love.load(...)
         log.info("Game is muted!")
     end
 
-    State.set_state(1)
+    State.set_state(State.STATE or 1)
     
     love.window.setTitle("")
     love.window.setMode(800, 600, {
@@ -91,7 +94,36 @@ end
 
 function love.draw()
     lg.reset()
+    State.debug_stack = {}
+
+    if State.SHOWFPS then
+        table.insert(
+            State.debug_stack,
+            ("FPS: %s"):format( lt.getFPS() )
+        )
+    end
+
+    if State.DEBUG then
+        table.insert(
+            State.debug_stack,
+            ("delta: %s"):format( lt.getDelta() * 1000 )
+        )
+    end
+
     current:draw(lt.getDelta())
+
+    lg.reset()
+    if #State.debug_stack > 0 then
+        lg.scale(2)
+    
+        lg.setFont(assets.font1)
+        for k, v in ipairs(State.debug_stack) do
+            lg.setColor(0, 0, 0, 0.8)
+            lg.print(v, 5, ((k-1)*10)+1)
+            lg.setColor(1, 1, 1, 1)
+            lg.print(v, 4, (k-1)*10)
+        end
+    end
 
     if State.PROFILE then
         profi:reset()
