@@ -1,5 +1,5 @@
 Tools used:
-  lite-xl, Bitwig Studio, Löve (love2d), LDTK, Piskel, Lua,
+  VSCode, Bitwig Studio, Löve (love2d), LDTK, Libresprite, Lua,
   Insane amounts of ritalin, Audacity, Some amazing libraries 
   written by very very very talented and nice people :)
 
@@ -26,7 +26,7 @@ Credits:
     
   Nahuel, you suck.
   
-Everything else inside of assets/ is covered under the CC-BY-SA 4.0 License, Copyright (C) Nelson Lopez.
+Everything inside of assets/ is covered under the CC-BY-SA 4.0 License, Copyright (C) Nelson Lopez.
 Everything else is covered under the ZLIB LICENSE ahead:
   Copyright (c) 2022 Nelson Lopez
   
