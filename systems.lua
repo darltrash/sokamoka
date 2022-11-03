@@ -281,6 +281,7 @@ local player = {
         ent.scale = vector.one:copy()
         ent.center = vector(8, 16)
         ent.gravity_acceleration = 0
+        ent.shear = 0
         
         ent.collider.w = 8
         ent.sprite_offset = vector(-4, 0)
@@ -354,6 +355,8 @@ local player = {
             ent.moving = false
         end
         
+        --ent.shear = lume.lerp(ent.shear, ((ent.acceleration-80)/10)*-ent.scale.x, delta*5)
+
         local q = math.floor(ent.anim_counter % 4) +1
         ent.quad = self.ANI_MAIN[q]
         
@@ -449,8 +452,9 @@ local player = {
                 ent.past_position = ent.position:copy()
                 ent.gravity_acceleration = 0
                 ent.velocity = vector(0, 0)
-                ent.acceleration = 64
+                ent.acceleration = 80
                 ent.on_transition = false
+                ent.shear = 0
 
                 world.level.world:move(ent, ent.position.x, ent.position.y, self.fake_filter)
             end

@@ -44,6 +44,7 @@ State.set_state = function (s, ...)
     current.draw = current.draw or NOOP
     current.resize = current.resize or NOOP
     current:init()
+    current:resize(lg.getDimensions())
 end
 
 function love.load(...)

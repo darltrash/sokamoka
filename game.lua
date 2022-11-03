@@ -35,19 +35,17 @@ return {
             entities = {},
             tiles = {}
         }
-        
-        local w, h = lg.getDimensions()
-        self.main_canvas = lg.newCanvas(w, h)
-        self.light_canvas = lg.newCanvas(w, h)
 
         self:load_map("assets/map_basic0.map")
         self:load_level("Test")
     end,
 
     resize = function (self, w, h)
-        self.main_canvas:release()
-        self.light_canvas:release()
-        self.main_canvas = lg.newCanvas(w, h)
+        if self.main_canvas then
+            self.main_canvas:release()
+            self.light_canvas:release()
+        end
+        self.main_canvas  = lg.newCanvas(w, h)
         self.light_canvas = lg.newCanvas(w, h)
     end,
 
@@ -269,12 +267,18 @@ return {
                             assets.shaders.main:send("threshold", 1)
                         end
 
+                        local s = ent.shear or 0
+                        lg.shear(s, 0)
+                        x = x - s
+
                         lg.setBlendMode(ent.blend or "alpha", ent.blend=="multiply" and "premultiplied" or nil)
                         if ent.quad then
                             lg.draw(ent.sprite, ent.quad, x+cx, y+cy, r, sx, sy, cx, cy)
                         else
                             lg.draw(ent.sprite, x+cx, y+cy, r, sx, sy, cx, cy)
                         end
+
+                        lg.shear(-s, 0)
                     end
                 end
             end    
